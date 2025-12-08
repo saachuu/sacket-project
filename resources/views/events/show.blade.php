@@ -9,7 +9,7 @@
 
 @section('content')
     <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-        <img src="{{ asset($event->image) }}" alt="{{ $event->name }}" class="w-full h-64 md:h-96 object-cover">
+        <img src="{{ asset('storage/' . $event->image) }}"" alt="{{ $event->name }}" class="w-full h-64 md:h-96 object-cover">
 
         <div class="p-6 md:p-8">
             <h1 class="text-3xl md:text-4xl font-bold text-gray-900">{{ $event->name }}</h1>

@@ -5,7 +5,7 @@
             <a href="{{ route('events.show', $event->slug) }}" class="block">
                 <div class="relative">
                     {{-- Gambar --}}
-                    <img src="{{ asset($event->image) }}" alt="Gambar {{ $event->name }}"
+                    <img src="{{ asset('storage/' . $event->image) }}"alt="Gambar {{ $event->name }}"
                         class="w-full h-48 object-cover">
 
                     {{-- Overlay Hover --}}

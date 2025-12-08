@@ -17,7 +17,7 @@
                                 class="p-8 md:p-12 flex flex-col md:flex-row items-center justify-center bg-gray-50 rounded-lg">
                                 <div class="w-full md:w-1/2 mb-6 md:mb-0">
                                     <a href="{{ route('events.show', $event->slug) }}">
-                                        <img src="{{ asset($event->image) }}" alt="Banner {{ $event->name }}"
+                                        <img src="{{ asset('storage/' . $event->image) }}"" alt="Banner {{ $event->name }}"
                                             class="rounded-lg shadow-2xl w-full h-auto max-h-80 object-contain">
                                     </a>
                                 </div>
