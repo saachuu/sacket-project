@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event; // Pastikan import model Event
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Carbon\Carbon;
 
 class TicketScannerController extends Controller
 {
@@ -16,12 +16,8 @@ class TicketScannerController extends Controller
      */
     public function index(): View
     {
-        // Ambil event yang belum selesai (hari ini atau masa depan) untuk dipilih Admin
-        $events = Event::where('end_date', '>=', now())
-            ->orderBy('start_date', 'asc')
-            ->get();
-
-        return view('admin.scanner.index', compact('events'));
+        // Global Scanner tidak butuh list event di halaman depan
+        return view('admin.scanner.index');
     }
 
     /**
@@ -31,11 +27,11 @@ class TicketScannerController extends Controller
     {
         $request->validate([
             'unique_code' => 'required|string',
-            'event_id'    => 'required|exists:events,id', // Validasi Event ID dari dropdown scanner
         ]);
 
+        // 1. Cari Tiket berdasarkan unique_code saja
         $ticket = OrderItem::where('unique_code', $request->unique_code)
-            ->with(['order.event', 'ticketCategory'])
+            ->with(['order.event', 'ticketCategory']) // Load relasi order -> event
             ->first();
 
         // Kasus 1: Tiket tidak ditemukan di database manapun
@@ -46,13 +42,18 @@ class TicketScannerController extends Controller
             ], 404);
         }
 
-        // Kasus 1.5: Tiket valid, tapi BUKAN untuk event ini
-        // (Logika "Benar tidaknya tiket untuk konser ini")
-        if ($ticket->order->event_id != $request->event_id) {
+        $event = $ticket->order->event;
+
+        // Kasus 1.5: GLOBAL SCANNER CHECK (Cek Tanggal Event)
+        // Kita cek apakah tanggal event == HARI INI?
+        // Asumsi kolom di database events adalah 'start_date'
+        $eventDate = Carbon::parse($event->start_date);
+
+        if (!$eventDate->isToday()) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Tiket Salah Event!',
-                'detail' => 'Tiket ini untuk event: ' . $ticket->order->event->name
+                'message' => 'Tiket Salah Tanggal!',
+                'detail' => 'Tiket ini untuk event: ' . $event->name . ' pada tanggal ' . $eventDate->format('d M Y')
             ], 400);
         }
 
@@ -61,7 +62,10 @@ class TicketScannerController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Tiket Belum Lunas!',
-                'data' => $ticket
+                'data' => [
+                    'event_name' => $event->name,
+                    'owner' => $ticket->order->name ?? 'User'
+                ]
             ], 422);
         }
 
@@ -71,7 +75,11 @@ class TicketScannerController extends Controller
                 'status' => 'error',
                 'message' => 'Tiket Sudah Digunakan!',
                 'checked_in_at' => $ticket->checked_in_at->format('d M Y, H:i:s'),
-                'data' => $ticket
+                'data' => [
+                    'event_name' => $event->name,
+                    'owner' => $ticket->order->name ?? 'User', // Sesuaikan kolom nama user di tabel orders
+                    'ticket_category' => $ticket->ticketCategory->name
+                ]
             ], 409);
         }
 
@@ -85,7 +93,11 @@ class TicketScannerController extends Controller
             'status' => 'success',
             'message' => 'Check-in Berhasil!',
             'checked_in_at' => $ticket->checked_in_at->format('H:i:s'),
-            'data' => $ticket
+            'data' => [
+                'event_name' => $event->name, // PENTING: Kirim nama event ke layar admin
+                'owner' => $ticket->order->name ?? 'User',
+                'ticket_category' => $ticket->ticketCategory->name
+            ]
         ]);
     }
 }
