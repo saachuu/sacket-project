@@ -28,7 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName('Sacket Admin')
+            ->brandName('Culvert Admin')
             // 2. Tambahkan method ini untuk membuat link navigasi baru
             ->navigationItems([
             // Item pertama (sudah ada)

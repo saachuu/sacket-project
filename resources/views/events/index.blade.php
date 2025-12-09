@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Sacket - Temukan Event Favoritmu')
+@section('title', 'Culvert - Temukan Event Favoritmu')
 
 @section('content')
 

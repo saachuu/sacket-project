@@ -7,7 +7,7 @@
         {{-- Logo --}}
         <a href="{{ route('events.index') }}" class="text-2xl font-bold"
             :class="{ 'text-gray-800': scrolled, 'text-gray-500': !scrolled }">
-            Sacket
+            Culvert
         </a>
 
         {{-- Navigasi Desktop (tersembunyi di mobile) --}}

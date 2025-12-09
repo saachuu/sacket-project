@@ -4,8 +4,8 @@
 @section('description',
     $event->description
     ? Str::limit(strip_tags($event->description), 160)
-    : 'Beli tiket event musik
-    favoritmu dengan mudah dan aman di Sacket.')
+    : 'Beli tiket event
+    favoritmu dengan mudah dan aman di Culvert.')
 
 @section('content')
     <div class="bg-white rounded-lg shadow-xl overflow-hidden">

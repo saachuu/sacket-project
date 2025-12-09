@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {{-- Deskripsi Dinamis untuk SEO --}}
-    <meta name="description" content="@yield('description', 'Beli tiket event musik favoritmu dengan mudah dan aman di Sacket.')">
-    <title>@yield('title', 'Sacket')</title>
+    <meta name="description" content="@yield('description', 'Beli tiket event favoritmu dengan mudah dan aman di Culvert.')">
+    <title>@yield('title', 'Culvert')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
